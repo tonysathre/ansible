@@ -2,7 +2,7 @@
 
 - name: playbook to bootstrap managed ubuntu nodes
   hosts: all
-  gather_facts: False
+  gather_facts: false
   remote_user: ubuntu
   become: yes
   become_user: root
@@ -11,6 +11,20 @@
   tasks:
     - name: Install Python
       raw: test -r /usr/bin/python || (apt update && apt install python -y)
+    
+    - name: create /root/.ssh folder
+      file:
+              path: /root/.ssh
+              state: directory
+              mode: 700
+
+
+    - name: create authorized_keys file
+      file:
+              path: /root/.ssh/authorized_keys
+              state: touch
+              mode: 644
+
 
     - name: ssh key-based authorized login
       authorized_key: user=root
